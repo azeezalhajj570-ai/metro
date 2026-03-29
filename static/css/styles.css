@@ -1,0 +1,18 @@
+body {
+    background:
+        radial-gradient(circle at top left, rgba(20, 184, 106, 0.12), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(219, 124, 38, 0.12), transparent 24%),
+        #f7f5ef;
+}
+
+.page-shell {
+    min-height: 100vh;
+}
+
+textarea {
+    resize: vertical;
+}
+
+canvas {
+    max-height: 100%;
+}

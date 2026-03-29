@@ -1,0 +1,234 @@
+{
+  "profiles": {
+    "elderly": {
+      "label": "Elderly Mode",
+      "guidance": "Larger text, calmer pacing, and lower-transfer recommendations are prioritized."
+    },
+    "children": {
+      "label": "Children Mode",
+      "guidance": "Simple language, family-safe waiting points, and visually clear step sequencing are prioritized."
+    },
+    "visually_impaired": {
+      "label": "Visually Impaired Mode",
+      "guidance": "Audio-first instructions and tactile-friendly stations are prioritized."
+    },
+    "deaf_mute": {
+      "label": "Deaf and Mute Mode",
+      "guidance": "Visual alerts, text-based help flows, and low-ambiguity transfers are prioritized."
+    }
+  },
+  "stations": [
+    {
+      "name": "King Abdullah Financial District",
+      "line": "Blue Line",
+      "zone": "North Hub",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": true,
+      "tactile_guidance": true
+    },
+    {
+      "name": "STC",
+      "line": "Blue Line",
+      "zone": "North Hub",
+      "has_elevator": true,
+      "has_staff_desk": false,
+      "family_waiting_area": false,
+      "tactile_guidance": true
+    },
+    {
+      "name": "SABIC",
+      "line": "Blue Line",
+      "zone": "Business District",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": false,
+      "tactile_guidance": true
+    },
+    {
+      "name": "National Museum",
+      "line": "Blue Line",
+      "zone": "Central Riyadh",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": true,
+      "tactile_guidance": true
+    },
+    {
+      "name": "Olaya-Batha",
+      "line": "Red Line",
+      "zone": "Central Riyadh",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": true,
+      "tactile_guidance": true
+    },
+    {
+      "name": "Ministry District",
+      "line": "Red Line",
+      "zone": "Government Quarter",
+      "has_elevator": true,
+      "has_staff_desk": false,
+      "family_waiting_area": false,
+      "tactile_guidance": false
+    },
+    {
+      "name": "King Salman Park",
+      "line": "Red Line",
+      "zone": "South Central",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": true,
+      "tactile_guidance": true
+    },
+    {
+      "name": "Qasr Al Hokm",
+      "line": "Green Line",
+      "zone": "Historic Core",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": true,
+      "tactile_guidance": true
+    },
+    {
+      "name": "Al Murabba",
+      "line": "Green Line",
+      "zone": "Historic Core",
+      "has_elevator": false,
+      "has_staff_desk": false,
+      "family_waiting_area": false,
+      "tactile_guidance": true
+    },
+    {
+      "name": "Riyadh Railway",
+      "line": "Green Line",
+      "zone": "East Gateway",
+      "has_elevator": true,
+      "has_staff_desk": true,
+      "family_waiting_area": true,
+      "tactile_guidance": false
+    }
+  ],
+  "edges": {
+    "King Abdullah Financial District": [
+      {
+        "to": "STC",
+        "minutes": 4,
+        "type": "ride"
+      }
+    ],
+    "STC": [
+      {
+        "to": "King Abdullah Financial District",
+        "minutes": 4,
+        "type": "ride"
+      },
+      {
+        "to": "SABIC",
+        "minutes": 3,
+        "type": "ride"
+      }
+    ],
+    "SABIC": [
+      {
+        "to": "STC",
+        "minutes": 3,
+        "type": "ride"
+      },
+      {
+        "to": "National Museum",
+        "minutes": 5,
+        "type": "ride"
+      },
+      {
+        "to": "Olaya-Batha",
+        "minutes": 4,
+        "type": "transfer"
+      }
+    ],
+    "National Museum": [
+      {
+        "to": "SABIC",
+        "minutes": 5,
+        "type": "ride"
+      },
+      {
+        "to": "Qasr Al Hokm",
+        "minutes": 4,
+        "type": "transfer"
+      }
+    ],
+    "Olaya-Batha": [
+      {
+        "to": "SABIC",
+        "minutes": 4,
+        "type": "transfer"
+      },
+      {
+        "to": "Ministry District",
+        "minutes": 4,
+        "type": "ride"
+      }
+    ],
+    "Ministry District": [
+      {
+        "to": "Olaya-Batha",
+        "minutes": 4,
+        "type": "ride"
+      },
+      {
+        "to": "King Salman Park",
+        "minutes": 5,
+        "type": "ride"
+      }
+    ],
+    "King Salman Park": [
+      {
+        "to": "Ministry District",
+        "minutes": 5,
+        "type": "ride"
+      },
+      {
+        "to": "Qasr Al Hokm",
+        "minutes": 6,
+        "type": "transfer"
+      }
+    ],
+    "Qasr Al Hokm": [
+      {
+        "to": "National Museum",
+        "minutes": 4,
+        "type": "transfer"
+      },
+      {
+        "to": "King Salman Park",
+        "minutes": 6,
+        "type": "transfer"
+      },
+      {
+        "to": "Al Murabba",
+        "minutes": 3,
+        "type": "ride"
+      }
+    ],
+    "Al Murabba": [
+      {
+        "to": "Qasr Al Hokm",
+        "minutes": 3,
+        "type": "ride"
+      },
+      {
+        "to": "Riyadh Railway",
+        "minutes": 5,
+        "type": "ride"
+      }
+    ],
+    "Riyadh Railway": [
+      {
+        "to": "Al Murabba",
+        "minutes": 5,
+        "type": "ride"
+      }
+    ]
+  }
+}
