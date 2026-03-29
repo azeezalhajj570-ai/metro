@@ -16,126 +16,126 @@
 
     <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div class="space-y-6">
-            <div class="rounded-[32px] bg-white p-8 shadow-panel">
-                <div class="mb-6">
-                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Traveler Workspace</p>
-                    <h3 class="mt-2 text-3xl font-semibold tracking-tight text-ink">Generate an assistance plan</h3>
+            <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+                <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                    <div class="mb-6">
+                        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Traveler Workspace</p>
+                        <h3 class="mt-2 text-3xl font-semibold tracking-tight text-ink">Generate an assistance plan</h3>
+                    </div>
+
+                    {% if error_message %}
+                        <div class="mb-5 rounded-3xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" id="plan-form" class="grid gap-5 md:grid-cols-2">
+                        <div class="md:col-span-2">
+                            <label for="traveler_name" class="block text-sm font-medium text-slate-700">Traveler name</label>
+                            <input id="traveler_name" name="traveler_name" type="text" value="{{ form_data.traveler_name }}" class="form-input mt-2" placeholder="Optional display name for request tracking">
+                        </div>
+
+                        <div>
+                            <label for="profile" class="block text-sm font-medium text-slate-700">Accessibility profile</label>
+                            <select id="profile" name="profile" class="form-input mt-2">
+                                {% for profile_key, profile_info in profiles.items() %}
+                                    <option value="{{ profile_key }}" {% if form_data.profile == profile_key %}selected{% endif %}>{{ profile_info.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="priority" class="block text-sm font-medium text-slate-700">Route priority</label>
+                            <select id="priority" name="priority" class="form-input mt-2">
+                                {% for value, label in priority_options.items() %}
+                                    <option value="{{ value }}" {% if form_data.priority == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="origin" class="block text-sm font-medium text-slate-700">Current station</label>
+                            <select id="origin" name="origin" class="form-input mt-2">
+                                <option value="">Select station</option>
+                                {% for station in stations %}
+                                    <option value="{{ station }}" {% if form_data.origin == station %}selected{% endif %}>{{ station }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="destination" class="block text-sm font-medium text-slate-700">Destination station</label>
+                            <select id="destination" name="destination" class="form-input mt-2">
+                                <option value="">Select station</option>
+                                {% for station in stations %}
+                                    <option value="{{ station }}" {% if form_data.destination == station %}selected{% endif %}>{{ station }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="request_type" class="block text-sm font-medium text-slate-700">Request type</label>
+                            <select id="request_type" name="request_type" class="form-input mt-2">
+                                <option value="route_guidance" {% if form_data.request_type == "route_guidance" %}selected{% endif %}>Route guidance</option>
+                                <option value="staff_assistance" {% if form_data.request_type == "staff_assistance" %}selected{% endif %}>Immediate staff help</option>
+                                <option value="sos_alert" {% if form_data.request_type == "sos_alert" %}selected{% endif %}>Emergency SOS</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="source_device" class="block text-sm font-medium text-slate-700">Access channel</label>
+                            <select id="source_device" name="source_device" class="form-input mt-2">
+                                {% for value, label in device_options.items() %}
+                                    <option value="{{ value }}" {% if form_data.source_device == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label for="notes" class="block text-sm font-medium text-slate-700">Special notes</label>
+                            <textarea id="notes" name="notes" rows="4" class="form-input mt-2" placeholder="Example: separated child near platform gate, user prefers elevators, needs visual-only communication">{{ form_data.notes }}</textarea>
+                        </div>
+
+                        <div class="md:col-span-2 flex flex-wrap gap-3">
+                            <button id="plan-button" type="submit" class="inline-flex items-center justify-center rounded-2xl bg-ink px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal focus:outline-none focus:ring-4 focus:ring-skyline">
+                                <span class="button-text">Create Assistance Plan</span>
+                                <span class="loading-text hidden">Generating...</span>
+                            </button>
+                            <a href="{{ url_for('refresh') }}" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">Clear</a>
+                        </div>
+                    </form>
                 </div>
 
-                {% if error_message %}
-                    <div class="mb-5 rounded-3xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
-                        {{ error_message }}
+                <div class="rounded-[32px] bg-ink p-8 text-white shadow-panel">
+                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Immediate Actions</p>
+                    <div class="mt-5 grid gap-4">
+                        {% for action in quick_actions %}
+                            <button
+                                type="button"
+                                class="quick-action rounded-3xl border border-white/10 bg-white/10 p-5 text-left transition hover:bg-white/15"
+                                data-request-type="{{ action.request_type }}"
+                            >
+                                <span class="block text-lg font-semibold">{{ action.label }}</span>
+                                <span class="mt-2 block text-sm leading-7 text-white/75">{{ action.description }}</span>
+                            </button>
+                        {% endfor %}
                     </div>
-                {% endif %}
-
-                <form method="post" id="plan-form" class="grid gap-5 md:grid-cols-2">
-                    <div class="md:col-span-2">
-                        <label for="traveler_name" class="block text-sm font-medium text-slate-700">Traveler name</label>
-                        <input id="traveler_name" name="traveler_name" type="text" value="{{ form_data.traveler_name }}" class="form-input mt-2" placeholder="Optional display name for request tracking">
-                    </div>
-
-                    <div>
-                        <label for="profile" class="block text-sm font-medium text-slate-700">Accessibility profile</label>
-                        <select id="profile" name="profile" class="form-input mt-2">
-                            {% for profile_key, profile_info in profiles.items() %}
-                                <option value="{{ profile_key }}" {% if form_data.profile == profile_key %}selected{% endif %}>{{ profile_info.label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="priority" class="block text-sm font-medium text-slate-700">Route priority</label>
-                        <select id="priority" name="priority" class="form-input mt-2">
-                            {% for value, label in priority_options.items() %}
-                                <option value="{{ value }}" {% if form_data.priority == value %}selected{% endif %}>{{ label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="origin" class="block text-sm font-medium text-slate-700">Current station</label>
-                        <select id="origin" name="origin" class="form-input mt-2">
-                            <option value="">Select station</option>
-                            {% for station in stations %}
-                                <option value="{{ station }}" {% if form_data.origin == station %}selected{% endif %}>{{ station }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="destination" class="block text-sm font-medium text-slate-700">Destination station</label>
-                        <select id="destination" name="destination" class="form-input mt-2">
-                            <option value="">Select station</option>
-                            {% for station in stations %}
-                                <option value="{{ station }}" {% if form_data.destination == station %}selected{% endif %}>{{ station }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="request_type" class="block text-sm font-medium text-slate-700">Request type</label>
-                        <select id="request_type" name="request_type" class="form-input mt-2">
-                            <option value="route_guidance" {% if form_data.request_type == "route_guidance" %}selected{% endif %}>Route guidance</option>
-                            <option value="staff_assistance" {% if form_data.request_type == "staff_assistance" %}selected{% endif %}>Immediate staff help</option>
-                            <option value="sos_alert" {% if form_data.request_type == "sos_alert" %}selected{% endif %}>Emergency SOS</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="source_device" class="block text-sm font-medium text-slate-700">Access channel</label>
-                        <select id="source_device" name="source_device" class="form-input mt-2">
-                            {% for value, label in device_options.items() %}
-                                <option value="{{ value }}" {% if form_data.source_device == value %}selected{% endif %}>{{ label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="notes" class="block text-sm font-medium text-slate-700">Special notes</label>
-                        <textarea id="notes" name="notes" rows="4" class="form-input mt-2" placeholder="Example: separated child near platform gate, user prefers elevators, needs visual-only communication">{{ form_data.notes }}</textarea>
-                    </div>
-
-                    <div class="md:col-span-2 flex flex-wrap gap-3">
-                        <button id="plan-button" type="submit" class="inline-flex items-center justify-center rounded-2xl bg-ink px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal focus:outline-none focus:ring-4 focus:ring-skyline">
-                            <span class="button-text">Create Assistance Plan</span>
-                            <span class="loading-text hidden">Generating...</span>
-                        </button>
-                        <a href="{{ url_for('refresh') }}" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">Clear</a>
-                    </div>
-                </form>
-            </div>
-
-            <div class="rounded-[32px] bg-ink p-8 text-white shadow-panel">
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Immediate Actions</p>
-                <div class="mt-5 grid gap-4">
-                    {% for action in quick_actions %}
-                        <button
-                            type="button"
-                            class="quick-action rounded-3xl border border-white/10 bg-white/10 p-5 text-left transition hover:bg-white/15"
-                            data-request-type="{{ action.request_type }}"
-                        >
-                            <span class="block text-lg font-semibold">{{ action.label }}</span>
-                            <span class="mt-2 block text-sm leading-7 text-white/75">{{ action.description }}</span>
-                        </button>
-                    {% endfor %}
+                    <p id="quick-action-status" class="mt-4 text-sm text-white/70"></p>
                 </div>
-                <p id="quick-action-status" class="mt-4 text-sm text-white/70"></p>
             </div>
         </div>
 
         <div class="space-y-6">
-            <div class="rounded-[32px] result-panel p-8 text-white shadow-panel {% if plan %}{{ plan.profile_theme }}{% endif %}">
-                <div class="flex items-center justify-between gap-4">
-                    <div>
-                        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Generated Output</p>
-                        <h3 class="mt-2 text-2xl font-semibold">Adaptive route and safety brief</h3>
-                    </div>
-                    {% if plan %}
+            {% if plan %}
+                <div class="rounded-[32px] result-panel p-8 text-white shadow-panel {{ plan.profile_theme }}">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Generated Output</p>
+                            <h3 class="mt-2 text-2xl font-semibold">Adaptive route and safety brief</h3>
+                        </div>
                         <span class="rounded-full bg-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">{{ plan.profile_label }}</span>
-                    {% endif %}
-                </div>
+                    </div>
 
-                {% if plan %}
                     <div class="mt-6 rounded-3xl bg-white/10 p-6 backdrop-blur">
                         <p class="text-sm text-white/70">Summary</p>
                         <p class="mt-2 text-2xl font-semibold">{{ plan.summary }}</p>
@@ -158,14 +158,8 @@
                             </div>
                         </div>
                     </div>
-                {% else %}
-                    <div class="mt-6 rounded-3xl bg-white/10 p-6 text-sm leading-7 text-white/80">
-                        Submit a traveler request to see route guidance and safety details.
-                    </div>
-                {% endif %}
-            </div>
+                </div>
 
-            {% if plan %}
                 <div class="rounded-[32px] bg-white p-8 shadow-panel">
                     <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Step-by-Step Guidance</p>
                     <div class="mt-5 space-y-4">

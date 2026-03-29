@@ -111,7 +111,7 @@
         </main>
 
         <footer class="mt-8 border-t border-white/70 bg-white/80">
-            <div class="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:px-5 lg:grid-cols-3 lg:px-8">
+            <div class="mx-auto grid max-w-7xl gap-6 px-4 py-8 sm:px-5 lg:grid-cols-2 lg:px-8">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-teal">Smart Metro Assistance</p>
                     <p class="mt-3 text-sm leading-7 text-slate-600">Accessible metro guidance for travelers and station operators.</p>
@@ -119,13 +119,9 @@
                 <div>
                     <p class="text-sm font-semibold text-ink">Navigation</p>
                     <div class="mt-3 space-y-2 text-sm text-slate-600">
-                        <p>Traveler hub</p>
-                        <p>Operator dashboard</p>
+                        <p><a href="{{ url_for('index') }}" class="transition hover:text-teal">Traveler hub</a></p>
+                        <p><a href="{{ url_for('dashboard') }}" class="transition hover:text-teal">Operator dashboard</a></p>
                     </div>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-ink">Prototype</p>
-                    <p class="mt-3 text-sm leading-7 text-slate-600">Built for mobile, kiosk, tablet, and desktop presentation screens.</p>
                 </div>
             </div>
         </footer>
