@@ -1,195 +1,349 @@
 {% extends "base.html" %}
 
-{% block title %}Metro Planner{% endblock %}
+{% block title %}Traveler Hub{% endblock %}
 
 {% block content %}
-<section class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-    <div class="rounded-[28px] bg-white p-8 shadow-soft">
-        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">Assistance Workspace</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-metro-ink">Generate an accessible metro travel plan</h2>
-                <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
-                    This demo adapts route guidance for elderly passengers, children, deaf and mute users, and visually impaired travelers. It produces simplified steps, route priorities, and support notes that can also be logged for the operations dashboard.
-                </p>
-            </div>
-            <div class="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                <span class="font-semibold text-metro-ink">Demo focus:</span> Riyadh-style assisted navigation
+<section class="space-y-6">
+    <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <div class="hero-panel overflow-hidden rounded-[32px] p-8 text-white shadow-panel lg:p-10">
+            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-white/75">Smart Metro Assistance Web Platform</p>
+            <h2 class="mt-4 max-w-3xl font-display text-4xl font-semibold leading-tight lg:text-5xl">
+                Adaptive metro guidance for elderly passengers, children, and users with sensory disabilities.
+            </h2>
+            <p class="mt-5 max-w-2xl text-sm leading-7 text-white/85 lg:text-base">
+                This prototype combines profile-aware routing, quick staff assistance, and a wristband-ready indoor safety concept so vulnerable passengers can move through large metro stations with more confidence and less dependence.
+            </p>
+            <div class="mt-8 grid gap-4 sm:grid-cols-3">
+                <div class="rounded-3xl bg-white/10 p-4 backdrop-blur">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">Profiles</p>
+                    <p class="mt-2 text-3xl font-semibold">4</p>
+                    <p class="mt-2 text-sm text-white/80">Elderly, children, visually impaired, deaf and mute.</p>
+                </div>
+                <div class="rounded-3xl bg-white/10 p-4 backdrop-blur">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">Localization</p>
+                    <p class="mt-2 text-3xl font-semibold">BLE</p>
+                    <p class="mt-2 text-sm text-white/80">Beacon zones support GPS-free assistance inside stations.</p>
+                </div>
+                <div class="rounded-3xl bg-white/10 p-4 backdrop-blur">
+                    <p class="text-xs uppercase tracking-[0.18em] text-white/60">Operator View</p>
+                    <p class="mt-2 text-3xl font-semibold">{{ dashboard_snapshot.total_requests }}</p>
+                    <p class="mt-2 text-sm text-white/80">Logged requests visible on the decision-support dashboard.</p>
+                </div>
             </div>
         </div>
 
-        {% if error_message %}
-            <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 shadow-soft">
-                {{ error_message }}
+        <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Field Snapshot</p>
+                    <h3 class="mt-3 text-2xl font-semibold text-ink">Priority operating signals</h3>
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">Open Dashboard</a>
             </div>
-        {% endif %}
-
-        <form method="post" id="plan-form" class="grid gap-5 md:grid-cols-2">
-            <div class="md:col-span-2">
-                <label for="traveler_name" class="block text-sm font-medium text-slate-700">Traveler name</label>
-                <input
-                    id="traveler_name"
-                    name="traveler_name"
-                    type="text"
-                    value="{{ form_data.traveler_name }}"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                    placeholder="Optional display name for the request log"
-                >
+            <div class="mt-6 space-y-4">
+                <div class="rounded-3xl bg-slate-50 p-5">
+                    <p class="text-sm text-slate-500">Busiest zone</p>
+                    <p class="mt-2 text-2xl font-semibold text-ink">{{ dashboard_snapshot.busiest_zone }}</p>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-3xl bg-amber-50 p-5">
+                        <p class="text-sm text-amber-700">SOS rate</p>
+                        <p class="mt-2 text-2xl font-semibold text-amber-900">{{ dashboard_snapshot.sos_rate }}%</p>
+                    </div>
+                    <div class="rounded-3xl bg-teal-50 p-5">
+                        <p class="text-sm text-teal-700">Most active profile</p>
+                        <p class="mt-2 text-xl font-semibold text-teal-950">{{ dashboard_snapshot.top_profile }}</p>
+                    </div>
+                </div>
+                <div class="rounded-3xl border border-dashed border-slate-200 p-5">
+                    <p class="text-sm leading-7 text-slate-600">
+                        Station kiosks, staff tablets, and personal mobile browsers all feed the same request log, allowing metro administrators to see where support is needed most.
+                    </p>
+                </div>
             </div>
-
-            <div>
-                <label for="profile" class="block text-sm font-medium text-slate-700">Accessibility profile</label>
-                <select
-                    id="profile"
-                    name="profile"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                >
-                    {% for profile_key, profile_info in profiles.items() %}
-                        <option value="{{ profile_key }}" {% if form_data.profile == profile_key %}selected{% endif %}>{{ profile_info.label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label for="priority" class="block text-sm font-medium text-slate-700">Route priority</label>
-                <select
-                    id="priority"
-                    name="priority"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                >
-                    <option value="balanced" {% if form_data.priority == "balanced" %}selected{% endif %}>Balanced route</option>
-                    <option value="fastest" {% if form_data.priority == "fastest" %}selected{% endif %}>Fastest route</option>
-                    <option value="fewest_transfers" {% if form_data.priority == "fewest_transfers" %}selected{% endif %}>Fewest transfers</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="origin" class="block text-sm font-medium text-slate-700">Current station</label>
-                <select
-                    id="origin"
-                    name="origin"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                >
-                    <option value="">Select station</option>
-                    {% for station in stations %}
-                        <option value="{{ station }}" {% if form_data.origin == station %}selected{% endif %}>{{ station }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label for="destination" class="block text-sm font-medium text-slate-700">Destination station</label>
-                <select
-                    id="destination"
-                    name="destination"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                >
-                    <option value="">Select station</option>
-                    {% for station in stations %}
-                        <option value="{{ station }}" {% if form_data.destination == station %}selected{% endif %}>{{ station }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label for="request_type" class="block text-sm font-medium text-slate-700">Request type</label>
-                <select
-                    id="request_type"
-                    name="request_type"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                >
-                    <option value="route_guidance" {% if form_data.request_type == "route_guidance" %}selected{% endif %}>Route guidance</option>
-                    <option value="staff_assistance" {% if form_data.request_type == "staff_assistance" %}selected{% endif %}>Staff assistance</option>
-                    <option value="sos_alert" {% if form_data.request_type == "sos_alert" %}selected{% endif %}>SOS alert</option>
-                </select>
-            </div>
-
-            <div class="md:col-span-2">
-                <label for="notes" class="block text-sm font-medium text-slate-700">Extra notes</label>
-                <textarea
-                    id="notes"
-                    name="notes"
-                    rows="4"
-                    class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-7 text-slate-800 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
-                    placeholder="Example: child separated from guardian near platform gate, prefers elevator access, needs visual alerts..."
-                >{{ form_data.notes }}</textarea>
-            </div>
-
-            <div class="md:col-span-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                    id="plan-button"
-                    type="submit"
-                    class="inline-flex items-center justify-center rounded-2xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700 focus:outline-none focus:ring-4 focus:ring-brand-100"
-                >
-                    <span class="button-text">Create Assistance Plan</span>
-                    <span class="loading-text hidden">Generating...</span>
-                </button>
-                <a href="{{ url_for('refresh') }}" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
-                    Clear
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 
-    <div class="space-y-6">
-        <div class="rounded-[28px] bg-gradient-to-br from-brand-700 via-brand-600 to-metro-ink p-8 text-white shadow-soft">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-100">Guided Output</p>
-            <h3 class="mt-3 text-2xl font-semibold">Assistance result</h3>
-            {% if plan %}
-                <div class="mt-6 rounded-3xl bg-white/10 p-6 backdrop-blur">
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="text-sm text-emerald-100">Profile</span>
-                        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white">
-                            {{ plan.profile_label }}
-                        </span>
-                    </div>
-                    <div class="mt-5">
-                        <p class="text-sm text-emerald-100">Route summary</p>
-                        <p class="mt-2 text-2xl font-semibold">{{ plan.summary }}</p>
-                    </div>
-                    <div class="mt-5 grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-emerald-50">
-                        <p><span class="font-semibold">Estimated time:</span> {{ plan.estimated_minutes }} minutes</p>
-                        <p><span class="font-semibold">Transfer count:</span> {{ plan.transfer_count }}</p>
-                        <p><span class="font-semibold">Stations covered:</span> {{ plan.route|join(" -> ") }}</p>
-                    </div>
+    <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Traveler Workspace</p>
+                    <h3 class="mt-2 text-3xl font-semibold tracking-tight text-ink">Generate an assistance plan</h3>
+                    <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
+                        Select a profile, route priority, and device channel. The planner will create simplified steps, safety notes, and a wristband-ready zone reference for station staff.
+                    </p>
                 </div>
-            {% else %}
-                <div class="mt-6 rounded-3xl border border-white/10 bg-white/10 p-6 text-sm leading-7 text-emerald-50">
-                    Submit an assistance request to see the suggested route, estimated time, support notes, and simplified station-by-station guidance.
+            </div>
+
+            {% if error_message %}
+                <div class="mb-5 rounded-3xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
+                    {{ error_message }}
                 </div>
             {% endif %}
+
+            <form method="post" id="plan-form" class="grid gap-5 md:grid-cols-2">
+                <div class="md:col-span-2">
+                    <label for="traveler_name" class="block text-sm font-medium text-slate-700">Traveler name</label>
+                    <input id="traveler_name" name="traveler_name" type="text" value="{{ form_data.traveler_name }}" class="form-input mt-2" placeholder="Optional display name for request tracking">
+                </div>
+
+                <div>
+                    <label for="profile" class="block text-sm font-medium text-slate-700">Accessibility profile</label>
+                    <select id="profile" name="profile" class="form-input mt-2">
+                        {% for profile_key, profile_info in profiles.items() %}
+                            <option value="{{ profile_key }}" {% if form_data.profile == profile_key %}selected{% endif %}>{{ profile_info.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="priority" class="block text-sm font-medium text-slate-700">Route priority</label>
+                    <select id="priority" name="priority" class="form-input mt-2">
+                        {% for value, label in priority_options.items() %}
+                            <option value="{{ value }}" {% if form_data.priority == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="origin" class="block text-sm font-medium text-slate-700">Current station</label>
+                    <select id="origin" name="origin" class="form-input mt-2">
+                        <option value="">Select station</option>
+                        {% for station in stations %}
+                            <option value="{{ station }}" {% if form_data.origin == station %}selected{% endif %}>{{ station }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="destination" class="block text-sm font-medium text-slate-700">Destination station</label>
+                    <select id="destination" name="destination" class="form-input mt-2">
+                        <option value="">Select station</option>
+                        {% for station in stations %}
+                            <option value="{{ station }}" {% if form_data.destination == station %}selected{% endif %}>{{ station }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="request_type" class="block text-sm font-medium text-slate-700">Request type</label>
+                    <select id="request_type" name="request_type" class="form-input mt-2">
+                        <option value="route_guidance" {% if form_data.request_type == "route_guidance" %}selected{% endif %}>Route guidance</option>
+                        <option value="staff_assistance" {% if form_data.request_type == "staff_assistance" %}selected{% endif %}>Immediate staff help</option>
+                        <option value="sos_alert" {% if form_data.request_type == "sos_alert" %}selected{% endif %}>Emergency SOS</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="source_device" class="block text-sm font-medium text-slate-700">Access channel</label>
+                    <select id="source_device" name="source_device" class="form-input mt-2">
+                        {% for value, label in device_options.items() %}
+                            <option value="{{ value }}" {% if form_data.source_device == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="notes" class="block text-sm font-medium text-slate-700">Special notes</label>
+                    <textarea id="notes" name="notes" rows="4" class="form-input mt-2" placeholder="Example: separated child near platform gate, user prefers elevators, needs visual-only communication">{{ form_data.notes }}</textarea>
+                </div>
+
+                <div class="md:col-span-2 flex flex-wrap gap-3">
+                    <button id="plan-button" type="submit" class="inline-flex items-center justify-center rounded-2xl bg-ink px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal focus:outline-none focus:ring-4 focus:ring-skyline">
+                        <span class="button-text">Create Assistance Plan</span>
+                        <span class="loading-text hidden">Generating...</span>
+                    </button>
+                    <a href="{{ url_for('refresh') }}" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">Clear</a>
+                </div>
+            </form>
         </div>
 
-        <div class="rounded-[28px] bg-white p-8 shadow-soft">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Support Notes</p>
-            {% if plan %}
-                <div class="mt-5 space-y-3 text-sm text-slate-600">
-                    {% for item in plan.support %}
-                        <div class="rounded-2xl bg-slate-50 p-4">
-                            {{ item }}
+        <div class="space-y-6">
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Profile Modules</p>
+                <div class="mt-5 grid gap-4">
+                    {% for profile_key, profile_info in profiles.items() %}
+                        <article class="rounded-3xl border border-slate-100 p-5 {{ 'ring-2 ring-teal/30 bg-teal-50/50' if form_data.profile == profile_key else 'bg-slate-50' }}">
+                            <h4 class="text-lg font-semibold text-ink">{{ profile_info.label }}</h4>
+                            <p class="mt-2 text-sm leading-7 text-slate-600">{{ profile_info.guidance }}</p>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="rounded-[32px] bg-ink p-8 text-white shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Immediate Actions</p>
+                <div class="mt-5 grid gap-4">
+                    {% for action in quick_actions %}
+                        <button
+                            type="button"
+                            class="quick-action rounded-3xl border border-white/10 bg-white/10 p-5 text-left transition hover:bg-white/15"
+                            data-request-type="{{ action.request_type }}"
+                        >
+                            <span class="block text-lg font-semibold">{{ action.label }}</span>
+                            <span class="mt-2 block text-sm leading-7 text-white/75">{{ action.description }}</span>
+                        </button>
+                    {% endfor %}
+                </div>
+                <p id="quick-action-status" class="mt-4 text-sm text-white/70"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <div class="space-y-6">
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Station Demo Network</p>
+                <h3 class="mt-2 text-2xl font-semibold text-ink">Riyadh-inspired accessible landmarks</h3>
+                <div class="mt-6 grid gap-4">
+                    {% for card in station_cards %}
+                        <div class="rounded-3xl border border-slate-100 bg-slate-50 p-5">
+                            <div class="flex items-center justify-between gap-4">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-ink">{{ card.name }}</h4>
+                                    <p class="mt-1 text-sm text-slate-500">{{ card.line }} • {{ card.zone }}</p>
+                                </div>
+                                <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-teal">{{ card.beacon_zone }}</span>
+                            </div>
+                            <p class="mt-3 text-sm leading-7 text-slate-600">Staff landmark: {{ card.landmark }}</p>
                         </div>
                     {% endfor %}
                 </div>
-            {% else %}
-                <div class="mt-5 rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
-                    Profile-specific recommendations will appear here after the route is generated.
+            </div>
+
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Wristband Concept</p>
+                <h3 class="mt-2 text-2xl font-semibold text-ink">GPS-free safety net inside underground stations</h3>
+                <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-3xl bg-slate-50 p-5">
+                        <p class="text-sm font-semibold text-ink">Prototype hardware</p>
+                        <p class="mt-2 text-sm leading-7 text-slate-600">ESP32 or Arduino Nano, BLE transceiver, vibration motor, LED status ring, tactile SOS switch, Li-Po battery.</p>
+                    </div>
+                    <div class="rounded-3xl bg-slate-50 p-5">
+                        <p class="text-sm font-semibold text-ink">Indoor positioning</p>
+                        <p class="mt-2 text-sm leading-7 text-slate-600">BLE beacons, Wi-Fi RSSI estimation, and fallback QR checkpoints approximate the traveler’s active station zone.</p>
+                    </div>
                 </div>
-            {% endif %}
+            </div>
         </div>
 
-        <div class="rounded-[28px] bg-white p-8 shadow-soft">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Step-by-Step Guidance</p>
-            {% if plan %}
-                <div class="mt-5 space-y-3 text-sm text-slate-600">
-                    {% for step in plan.steps %}
-                        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">{{ loop.index }}. {{ step }}</div>
-                    {% endfor %}
+        <div class="space-y-6">
+            <div class="rounded-[32px] result-panel p-8 text-white shadow-panel {% if plan %}{{ plan.profile_theme }}{% endif %}">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Generated Output</p>
+                        <h3 class="mt-2 text-2xl font-semibold">Adaptive route and safety brief</h3>
+                    </div>
+                    {% if plan %}
+                        <span class="rounded-full bg-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">{{ plan.profile_label }}</span>
+                    {% endif %}
                 </div>
-            {% else %}
-                <div class="mt-5 rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
-                    The generated journey steps will appear here in a simplified format for kiosks, mobile browsers, and staff tablets.
+
+                {% if plan %}
+                    <div class="mt-6 rounded-3xl bg-white/10 p-6 backdrop-blur">
+                        <p class="text-sm text-white/70">Summary</p>
+                        <p class="mt-2 text-2xl font-semibold">{{ plan.summary }}</p>
+                        <div class="mt-5 grid gap-3 md:grid-cols-2">
+                            <div class="rounded-2xl bg-white/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.16em] text-white/60">Travel time</p>
+                                <p class="mt-2 text-xl font-semibold">{{ plan.estimated_minutes }} min</p>
+                            </div>
+                            <div class="rounded-2xl bg-white/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.16em] text-white/60">Transfers</p>
+                                <p class="mt-2 text-xl font-semibold">{{ plan.transfer_count }}</p>
+                            </div>
+                            <div class="rounded-2xl bg-white/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.16em] text-white/60">Origin zone</p>
+                                <p class="mt-2 text-xl font-semibold">{{ plan.origin_zone }}</p>
+                            </div>
+                            <div class="rounded-2xl bg-white/10 p-4">
+                                <p class="text-xs uppercase tracking-[0.16em] text-white/60">Beacon zone</p>
+                                <p class="mt-2 text-xl font-semibold">{{ plan.origin_beacon_zone }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="mt-6 rounded-3xl bg-white/10 p-6 text-sm leading-7 text-white/80">
+                        Submit a traveler request to see route guidance, staff dispatch recommendations, and wristband localization details.
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Step-by-Step Guidance</p>
+                {% if plan %}
+                    <div class="mt-5 space-y-4">
+                        {% for step in plan.steps %}
+                            <div class="rounded-3xl bg-slate-50 p-5">
+                                <p class="text-sm font-semibold text-ink">{{ loop.index }}. {{ step.title }}</p>
+                                <p class="mt-2 text-sm leading-7 text-slate-600">{{ step.detail }}</p>
+                                <p class="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-teal">{{ step.hint }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="mt-5 rounded-3xl bg-slate-50 p-5 text-sm leading-7 text-slate-600">
+                        Simplified directions will appear here after route generation.
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="grid gap-6 lg:grid-cols-2">
+                <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Support Notes</p>
+                    {% if plan %}
+                        <div class="mt-5 space-y-3">
+                            {% for item in plan.support %}
+                                <div class="rounded-3xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">{{ item }}</div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="mt-5 rounded-3xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">Profile-specific recommendations will appear here.</div>
+                    {% endif %}
                 </div>
-            {% endif %}
+
+                <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Safety and Wristband</p>
+                    {% if plan %}
+                        <div class="mt-5 space-y-4">
+                            <div class="rounded-3xl bg-slate-50 p-4">
+                                <p class="text-sm font-semibold text-ink">Localized tracking</p>
+                                <p class="mt-2 text-sm leading-7 text-slate-600">{{ plan.wristband.status }}</p>
+                            </div>
+                            <div class="rounded-3xl bg-slate-50 p-4">
+                                <p class="text-sm font-semibold text-ink">Feedback mode</p>
+                                <p class="mt-2 text-sm leading-7 text-slate-600">{{ plan.wristband.feedback }}</p>
+                            </div>
+                            <div class="rounded-3xl bg-slate-50 p-4">
+                                <p class="text-sm font-semibold text-ink">Fallback</p>
+                                <p class="mt-2 text-sm leading-7 text-slate-600">{{ plan.wristband.fallback }}</p>
+                            </div>
+                            <div class="space-y-2">
+                                {% for note in plan.safety_notes %}
+                                    <div class="rounded-3xl border border-slate-100 p-4 text-sm leading-7 text-slate-600">{{ note }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="mt-5 rounded-3xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">Safety notes, staff dispatch routing, and wristband localization will appear here.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Communication Board</p>
+                {% if plan %}
+                    <div class="mt-5 flex flex-wrap gap-3">
+                        {% for message in plan.communication_board %}
+                            <button type="button" class="rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-50">{{ message }}</button>
+                        {% endfor %}
+                    </div>
+                    <p class="mt-4 text-sm leading-7 text-slate-500">These preset messages are intended for text-based staff interaction or speech-output modules.</p>
+                {% else %}
+                    <div class="mt-5 rounded-3xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">Preset text prompts will adapt to the chosen accessibility profile.</div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </section>

@@ -1,68 +1,80 @@
 {% extends "base.html" %}
 
-{% block title %}Metro Dashboard{% endblock %}
+{% block title %}Operator Dashboard{% endblock %}
 
 {% block content %}
 <section class="space-y-6">
-    <div class="rounded-[28px] bg-white p-8 shadow-soft">
-        <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+    <div class="rounded-[32px] bg-white p-8 shadow-panel">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">Operations Dashboard</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-metro-ink">Metro assistance monitoring and request analytics</h2>
-                <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
-                    Review assistance activity, emergency usage, and the most common accessibility profiles so operators can decide where to deploy staff support inside the station network.
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Management Decision Support Dashboard</p>
+                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-ink">Operational signals for vulnerable-traveler assistance</h2>
+                <p class="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+                    Review where support requests concentrate, how often SOS alerts occur, and which user profiles require the most operational attention. This is the metro-administrator view described in the project brief.
                 </p>
             </div>
         </div>
     </div>
 
-    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        <div class="rounded-[24px] bg-white p-6 shadow-soft">
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+        <div class="rounded-[28px] bg-white p-6 shadow-panel">
             <p class="text-sm text-slate-500">Total requests</p>
-            <p class="mt-3 text-3xl font-semibold text-metro-ink">{{ metrics.total_requests }}</p>
+            <p class="mt-3 text-3xl font-semibold text-ink">{{ metrics.total_requests }}</p>
         </div>
-        <div class="rounded-[24px] bg-white p-6 shadow-soft">
+        <div class="rounded-[28px] bg-white p-6 shadow-panel">
+            <p class="text-sm text-slate-500">Route guidance</p>
+            <p class="mt-3 text-3xl font-semibold text-teal">{{ metrics.guided_count }}</p>
+        </div>
+        <div class="rounded-[28px] bg-white p-6 shadow-panel">
+            <p class="text-sm text-slate-500">Staff help</p>
+            <p class="mt-3 text-3xl font-semibold text-coral">{{ metrics.staff_help_count }}</p>
+        </div>
+        <div class="rounded-[28px] bg-white p-6 shadow-panel">
             <p class="text-sm text-slate-500">SOS alerts</p>
-            <p class="mt-3 text-3xl font-semibold text-red-600">{{ metrics.sos_count }}</p>
+            <p class="mt-3 text-3xl font-semibold text-berry">{{ metrics.sos_count }}</p>
         </div>
-        <div class="rounded-[24px] bg-white p-6 shadow-soft">
-            <p class="text-sm text-slate-500">Guided routes</p>
-            <p class="mt-3 text-3xl font-semibold text-brand-700">{{ metrics.guided_count }}</p>
-        </div>
-        <div class="rounded-[24px] bg-white p-6 shadow-soft">
-            <p class="text-sm text-slate-500">Most active profile</p>
-            <p class="mt-3 text-2xl font-semibold text-metro-ink">{{ metrics.top_profile }}</p>
+        <div class="rounded-[28px] bg-white p-6 shadow-panel">
+            <p class="text-sm text-slate-500">Kiosk requests</p>
+            <p class="mt-3 text-3xl font-semibold text-moss">{{ metrics.kiosk_count }}</p>
         </div>
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        <div class="rounded-[28px] bg-white p-8 shadow-soft">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Alert Distribution</p>
-                    <h3 class="mt-2 text-xl font-semibold text-slate-900">SOS vs route guidance</h3>
+    <div class="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+        <div class="space-y-6">
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Alert Distribution</p>
+                <h3 class="mt-2 text-xl font-semibold text-ink">Assistance mix</h3>
+                <div class="mt-6 h-72">
+                    <canvas
+                        id="request-chart"
+                        data-guided="{{ metrics.guided_count }}"
+                        data-staff="{{ metrics.staff_help_count }}"
+                        data-sos="{{ metrics.sos_count }}"
+                    ></canvas>
+                </div>
+                <div class="mt-5 rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
+                    SOS rate across all requests: <span class="font-semibold text-ink">{{ metrics.sos_rate }}%</span>
                 </div>
             </div>
-            <div class="mt-6 h-72">
-                <canvas
-                    id="request-chart"
-                    data-sos="{{ metrics.sos_count }}"
-                    data-guided="{{ metrics.guided_count }}"
-                    data-high-priority="{{ metrics.high_priority_count }}"
-                ></canvas>
-            </div>
-            <div class="mt-5 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
-                SOS rate across all logged requests: <span class="font-semibold text-metro-ink">{{ metrics.sos_rate }}%</span>
+
+            <div class="rounded-[32px] bg-white p-8 shadow-panel">
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Deployment Focus</p>
+                <div class="mt-5 grid gap-4">
+                    <div class="rounded-3xl bg-slate-50 p-5">
+                        <p class="text-sm text-slate-500">Most active profile</p>
+                        <p class="mt-2 text-2xl font-semibold text-ink">{{ metrics.top_profile }}</p>
+                    </div>
+                    <div class="rounded-3xl bg-slate-50 p-5">
+                        <p class="text-sm text-slate-500">Busiest zone</p>
+                        <p class="mt-2 text-2xl font-semibold text-ink">{{ metrics.busiest_zone }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="rounded-[28px] bg-white p-8 shadow-soft">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Request Log</p>
-                    <h3 class="mt-2 text-xl font-semibold text-slate-900">Recent assistance activity</h3>
-                </div>
-            </div>
+        <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Recent Assistance Activity</p>
+            <h3 class="mt-2 text-xl font-semibold text-ink">Latest requests from travelers, kiosks, and wristband flows</h3>
             <div class="mt-6 overflow-x-auto">
                 <table class="min-w-full border-separate border-spacing-y-3">
                     <thead>
@@ -70,21 +82,23 @@
                             <th class="px-4">ID</th>
                             <th class="px-4">Traveler</th>
                             <th class="px-4">Profile</th>
-                            <th class="px-4">Request</th>
+                            <th class="px-4">Type</th>
+                            <th class="px-4">Zone</th>
+                            <th class="px-4">Channel</th>
                             <th class="px-4">Route</th>
                             <th class="px-4">Timestamp</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for row in recent_requests %}
-                            <tr class="rounded-2xl bg-slate-50 text-sm text-slate-700">
-                                <td class="rounded-l-2xl px-4 py-4 font-semibold text-slate-900">{{ row.id }}</td>
+                            <tr class="bg-slate-50 text-sm text-slate-700">
+                                <td class="rounded-l-2xl px-4 py-4 font-semibold text-ink">{{ row.id }}</td>
                                 <td class="px-4 py-4">{{ row.traveler_name }}</td>
                                 <td class="px-4 py-4">{{ row.profile.replace("_", " ").title() }}</td>
                                 <td class="px-4 py-4">
                                     <span class="rounded-full px-3 py-1 text-xs font-semibold
                                         {% if row.request_type == 'sos_alert' %}
-                                            bg-red-100 text-red-700
+                                            bg-rose-100 text-rose-700
                                         {% elif row.request_type == 'staff_assistance' %}
                                             bg-amber-100 text-amber-700
                                         {% else %}
@@ -93,18 +107,54 @@
                                         {{ row.request_type.replace("_", " ").title() }}
                                     </span>
                                 </td>
+                                <td class="px-4 py-4">{{ row.zone }}</td>
+                                <td class="px-4 py-4">{{ row.source_device.replace("_", " ").title() }}</td>
                                 <td class="px-4 py-4">{{ row.route_summary }}</td>
                                 <td class="rounded-r-2xl px-4 py-4 text-slate-500">{{ row.created_at }}</td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="6" class="px-4 py-8 text-center text-sm text-slate-500">
-                                    No requests have been logged yet. Generate a few assistance plans to populate the dashboard.
+                                <td colspan="8" class="px-4 py-8 text-center text-sm text-slate-500">
+                                    No requests have been logged yet. Use the traveler hub to generate plans or trigger quick assistance.
                                 </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+        <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Profile Breakdown</p>
+            <div class="mt-5 space-y-4">
+                {% for item in metrics.profile_breakdown %}
+                    <div class="rounded-3xl bg-slate-50 p-5">
+                        <div class="flex items-center justify-between gap-4">
+                            <p class="font-semibold text-ink">{{ item.profile.replace("_", " ").title() }}</p>
+                            <span class="rounded-full bg-white px-3 py-1 text-sm font-semibold text-teal">{{ item.count }}</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="rounded-3xl bg-slate-50 p-5 text-sm text-slate-500">No profile data yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Zone Breakdown</p>
+            <div class="mt-5 space-y-4">
+                {% for item in metrics.zone_breakdown %}
+                    <div class="rounded-3xl bg-slate-50 p-5">
+                        <div class="flex items-center justify-between gap-4">
+                            <p class="font-semibold text-ink">{{ item.zone }}</p>
+                            <span class="rounded-full bg-white px-3 py-1 text-sm font-semibold text-coral">{{ item.count }}</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="rounded-3xl bg-slate-50 p-5 text-sm text-slate-500">No zone data yet.</div>
+                {% endfor %}
             </div>
         </div>
     </div>

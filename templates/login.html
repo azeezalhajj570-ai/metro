@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Operator Login{% endblock %}
+
+{% block content %}
+<section class="mx-auto max-w-5xl">
+    <div class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <div class="hero-panel rounded-[32px] p-8 text-white shadow-panel lg:p-10">
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-white/70">Secure Operator Access</p>
+            <h2 class="mt-4 font-display text-4xl font-semibold leading-tight">Sign in to the metro operations dashboard.</h2>
+            <p class="mt-5 max-w-xl text-sm leading-7 text-white/85">
+                The dashboard is restricted to station operators and administrators. Use the seeded demo account to review assistance analytics, SOS activity, and zone pressure.
+            </p>
+            <div class="mt-8 rounded-3xl bg-white/10 p-5 text-sm leading-7 text-white/85">
+                Demo credentials:
+                <strong class="block mt-2 text-white">Username: admin</strong>
+                <strong class="block text-white">Password: admin123</strong>
+            </div>
+        </div>
+
+        <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Login</p>
+            <h3 class="mt-2 text-2xl font-semibold text-ink">Operator session</h3>
+
+            {% if error_message %}
+                <div class="mt-5 rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+
+            <form method="post" class="mt-6 space-y-5">
+                <input type="hidden" name="next" value="{{ next_url }}">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-slate-700">Username</label>
+                    <input id="username" name="username" type="text" class="form-input mt-2" placeholder="admin" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+                    <input id="password" name="password" type="password" class="form-input mt-2" placeholder="admin123" required>
+                </div>
+                <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-ink px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

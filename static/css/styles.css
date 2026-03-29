@@ -1,18 +1,104 @@
+:root {
+    --hero-a: #102a43;
+    --hero-b: #0f766e;
+    --hero-c: #d97706;
+    --panel-bg: rgba(255, 255, 255, 0.92);
+}
+
 body {
     background:
-        radial-gradient(circle at top left, rgba(20, 184, 106, 0.12), transparent 24%),
-        radial-gradient(circle at bottom right, rgba(219, 124, 38, 0.12), transparent 24%),
-        #f7f5ef;
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.18), transparent 22%),
+        radial-gradient(circle at 90% 10%, rgba(217, 119, 6, 0.18), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(159, 18, 57, 0.12), transparent 20%),
+        #f4efe6;
 }
 
 .page-shell {
     min-height: 100vh;
 }
 
-textarea {
+.hero-panel {
+    background:
+        linear-gradient(140deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        linear-gradient(135deg, var(--hero-a), var(--hero-b) 58%, var(--hero-c));
+    position: relative;
+}
+
+.hero-panel::after {
+    content: "";
+    position: absolute;
+    inset: auto -8% -25% auto;
+    width: 16rem;
+    height: 16rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.08);
+    filter: blur(6px);
+}
+
+.result-panel {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        linear-gradient(135deg, #102a43, #0f766e);
+}
+
+.theme-elderly {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        linear-gradient(135deg, #102a43, #3f6212);
+}
+
+.theme-children {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        linear-gradient(135deg, #0f766e, #d97706);
+}
+
+.theme-visual {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        linear-gradient(135deg, #102a43, #1d4ed8);
+}
+
+.theme-deaf {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        linear-gradient(135deg, #102a43, #9f1239);
+}
+
+.form-input {
+    width: 100%;
+    border-radius: 1.5rem;
+    border: 1px solid #dbe2ea;
+    background: #f8fafc;
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.form-input:focus {
+    border-color: #0f766e;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+textarea.form-input {
     resize: vertical;
+    min-height: 7rem;
+}
+
+.quick-action {
+    cursor: pointer;
 }
 
 canvas {
     max-height: 100%;
+}
+
+@media (max-width: 640px) {
+    .hero-panel::after {
+        width: 10rem;
+        height: 10rem;
+    }
 }

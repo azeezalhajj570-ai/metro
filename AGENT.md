@@ -17,7 +17,10 @@ Build and maintain a graduation-ready smart metro assistance platform for vulner
 - Run the Flask app with `python app.py`.
 - Optional deployment setting: define `FLASK_SECRET_KEY` to override the default development secret.
 - Assistance logs are stored in `data/metro.db`.
-- Station topology and accessibility metadata are stored in `data/metro_stations.json`.
+- Station topology, profile configuration, and demo indoor beacon zones are stored in `data/metro_stations.json`.
+- The database seeds demo requests and a default operator account on first run.
+- Demo operator credentials: `admin` / `admin123`.
+- Quick help actions use `POST /api/help`; route planning uses `POST /api/plan`.
 
 ## Documentation Rule
 

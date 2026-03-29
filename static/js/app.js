@@ -19,19 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const chartCanvas = document.getElementById("request-chart");
     if (chartCanvas && window.Chart) {
-        const sosCount = Number(chartCanvas.dataset.sos || 0);
         const guidedCount = Number(chartCanvas.dataset.guided || 0);
-        const highPriorityCount = Number(chartCanvas.dataset.highPriority || 0);
+        const staffCount = Number(chartCanvas.dataset.staff || 0);
+        const sosCount = Number(chartCanvas.dataset.sos || 0);
 
         new Chart(chartCanvas, {
             type: "doughnut",
             data: {
-                labels: ["SOS Alerts", "Guided Routes", "Fastest Priority Requests"],
+                labels: ["Route Guidance", "Staff Assistance", "SOS Alerts"],
                 datasets: [
                     {
-                        data: [sosCount, guidedCount, highPriorityCount],
-                        backgroundColor: ["#ef4444", "#14b86a", "#db7c26"],
-                        borderColor: ["#fee2e2", "#d7f5e5", "#ffedd5"],
+                        data: [guidedCount, staffCount, sosCount],
+                        backgroundColor: ["#0f766e", "#d97706", "#9f1239"],
+                        borderColor: ["#ccfbf1", "#fed7aa", "#fecdd3"],
                         borderWidth: 6
                     }
                 ]
@@ -48,4 +48,49 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    const quickActionStatus = document.getElementById("quick-action-status");
+    const quickActionButtons = document.querySelectorAll(".quick-action");
+
+    quickActionButtons.forEach((actionButton) => {
+        actionButton.addEventListener("click", async () => {
+            if (!form || !quickActionStatus) {
+                return;
+            }
+
+            const formData = new FormData(form);
+            const requestType = actionButton.dataset.requestType || "staff_assistance";
+            const payload = {
+                traveler_name: formData.get("traveler_name"),
+                profile: formData.get("profile"),
+                origin: formData.get("origin"),
+                destination: formData.get("destination") || formData.get("origin"),
+                priority: formData.get("priority"),
+                source_device: formData.get("source_device"),
+                notes: formData.get("notes"),
+                request_type: requestType
+            };
+
+            quickActionStatus.textContent = "Sending request...";
+
+            try {
+                const response = await fetch("/api/help", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || "Unable to trigger assistance.");
+                }
+
+                quickActionStatus.textContent = `${result.message} ${result.zone} is now tagged for follow-up.`;
+            } catch (error) {
+                quickActionStatus.textContent = error.message;
+            }
+        });
+    });
 });

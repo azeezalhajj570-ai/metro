@@ -1,142 +1,142 @@
 # Smart Metro Assistance Web Platform
 
-Smart Metro Assistance Web Platform is a graduation-level accessibility project that helps vulnerable passengers navigate a metro network more safely and independently. The system provides profile-aware route guidance, simplified step-by-step travel instructions, support recommendations for special-needs users, and an operations dashboard for tracking assistance activity.
+Smart Metro Assistance is a graduation-ready Flask platform that demonstrates how vulnerable passengers can receive accessible metro guidance, rapid staff support, and GPS-free safety coverage inside large underground stations.
 
-## Project Objectives
+The prototype is modeled around a Riyadh-inspired network and focuses on four traveler groups:
 
-- Support elderly passengers, children, deaf and mute users, and visually impaired travelers with adaptive guidance.
-- Simplify metro navigation using profile-specific route recommendations instead of complex full-network maps.
-- Log route requests, staff assistance requests, and SOS alerts for demonstration and analytics purposes.
-- Provide a polished web interface suitable for mobile browsers, kiosk screens, and staff tablets.
-- Keep the codebase modular, documented, and easy to explain during academic evaluation.
+- elderly passengers
+- children and minors
+- visually impaired users
+- deaf and mute users
 
-## System Architecture
+It also includes an operator dashboard for metro administrators who need visibility into SOS activity, zone pressure, and profile-specific demand.
 
-The project is divided into four layers:
+The app now ships with seeded demo data so the dashboard is populated on first run, plus a simple operator login flow for protected admin access.
 
-1. Request handling and page rendering in [app.py](/c:/Users/pc/Desktop/UNI-PROJECTS/metro/app.py).
-2. Route planning and accessibility-aware guidance in [src/planner.py](/c:/Users/pc/Desktop/UNI-PROJECTS/metro/src/planner.py).
-3. SQLite logging and dashboard metrics in [src/database.py](/c:/Users/pc/Desktop/UNI-PROJECTS/metro/src/database.py).
-4. Presentation layer in [templates/](/c:/Users/pc/Desktop/UNI-PROJECTS/metro/templates) and [static/](/c:/Users/pc/Desktop/UNI-PROJECTS/metro/static).
+## What the platform demonstrates
 
-## Technologies Used
+- Adaptive route planning with profile-specific guidance and accessibility-aware weighting
+- Immediate help and SOS request logging linked to indoor beacon zones
+- Mobile, kiosk, and staff-tablet friendly web experience
+- Conceptual smart wristband integration for underground localization and haptic alerts
+- Dashboard analytics for requests by type, profile, and station zone
 
-- Python 3.x
+## Stack
+
+- Python 3
 - Flask
 - SQLite
 - HTML5
-- Tailwind CSS
+- Tailwind CSS via CDN
+- Vanilla JavaScript
 - Chart.js
 
-## Project Structure
+## Project structure
 
 ```text
-project/
+metro/
 |-- app.py
 |-- requirements.txt
 |-- readme.md
 |-- AGENT.md
 |-- data/
-|   |-- metro_stations.json
-|   `-- metro.db
+|   `-- metro_stations.json
 |-- models/
 |   `-- .gitkeep
 |-- src/
 |   |-- __init__.py
-|   |-- planner.py
-|   `-- database.py
+|   |-- database.py
+|   `-- planner.py
+|-- static/
+|   |-- css/
+|   |   `-- styles.css
+|   `-- js/
+|       `-- app.js
 |-- templates/
 |   |-- base.html
-|   |-- index.html
-|   `-- dashboard.html
-`-- static/
-    |-- css/
-    |   `-- styles.css
-    `-- js/
-        `-- app.js
+|   |-- dashboard.html
+|   `-- index.html
+`-- tests/
+    `-- test_app.py
 ```
 
-## Core Features
+## Key pages
 
-- Accessibility-aware route planner with four user profiles
-- Simplified step-by-step metro journey instructions
-- Support notes for elevators, tactile guidance, visual alerts, and staff desks
-- Assistance request logging for route guidance, staff help, and SOS alerts
-- Admin dashboard with request analytics and recent activity history
-- JSON API endpoints for route planning and station lookup
+- `/` traveler hub for route planning, accessibility profile selection, quick staff help, and SOS triggers
+- `/login` operator login page
+- `/dashboard` operator dashboard for analytics and recent assistance activity
 
-## Demo Network Data
+## Seeded demo access
 
-The included dataset in [data/metro_stations.json](/c:/Users/pc/Desktop/UNI-PROJECTS/metro/data/metro_stations.json) contains:
+- Default operator username: `admin`
+- Default operator password: `admin123`
 
-- A small Riyadh-inspired metro station network
-- Line, zone, elevator, tactile, family-area, and staff-desk metadata
-- Profile definitions for elderly, children, visually impaired, and deaf and mute passengers
-- Weighted edges used by the route planner to prefer more suitable paths
+This seeded account is intended for prototype demonstrations only.
 
-This sample data is designed for graduation-project demonstrations and can be expanded later with real station information or live APIs.
-
-## Installation
-
-1. Create and activate a virtual environment.
-2. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. Optional: define a custom Flask secret key for deployment:
-
-```bash
-set FLASK_SECRET_KEY=your-secret-key
-```
-
-## How to Run the System
-
-Start the Flask application:
-
-```bash
-python app.py
-```
-
-Open:
-
-- `http://127.0.0.1:5000` for the metro assistance planner
-- `http://127.0.0.1:5000/dashboard` for the admin dashboard
-
-## API Endpoints
+## API endpoints
 
 - `GET /health`
 - `GET /api/stations`
 - `POST /api/plan`
+- `POST /api/help`
 
-Example JSON body for `POST /api/plan`:
+Example body for `POST /api/plan`:
 
 ```json
 {
   "origin": "King Abdullah Financial District",
   "destination": "Riyadh Railway",
   "profile": "visually_impaired",
-  "priority": "fewest_transfers"
+  "priority": "accessible",
+  "request_type": "route_guidance"
 }
 ```
 
-## Demonstration Flow
+Example body for `POST /api/help`:
 
-1. Start the Flask application.
-2. Open the planner page and choose an accessibility profile.
-3. Select the origin and destination stations.
-4. Generate the assistance plan and review the route, timing, and support notes.
-5. Open the dashboard to show the stored request history and SOS analytics.
+```json
+{
+  "traveler_name": "Demo User",
+  "profile": "elderly",
+  "origin": "National Museum",
+  "destination": "National Museum",
+  "priority": "balanced",
+  "source_device": "kiosk",
+  "request_type": "sos_alert",
+  "notes": "User feels unwell near the central gate."
+}
+```
 
-## Screenshots
+## Run locally
 
-- Home page screenshot: add a capture of the planner interface here.
-- Dashboard screenshot: add a capture of the analytics page here.
-- Mobile or kiosk screenshot: add a responsive-layout capture here.
+1. Create a virtual environment.
+2. Install dependencies:
 
-## Academic Notes
+```bash
+pip install -r requirements.txt
+```
 
-- The project reflects the problem statement in the project report by focusing on inclusive transit assistance.
-- The codebase is intentionally modular so the planning logic, persistence layer, and UI can be discussed separately.
-- The current route planner is rule-based and can later be extended with live metro APIs, indoor positioning, or machine learning.
+3. Start the app:
+
+```bash
+python app.py
+```
+
+4. Open `http://127.0.0.1:5000`.
+
+## Demo flow
+
+1. Open the traveler hub and choose an accessibility profile.
+2. Select an origin, destination, route priority, and access channel.
+3. Generate a plan and review the route summary, safety notes, and communication prompts.
+4. Trigger a quick assistance or SOS action to simulate staff escalation.
+5. Open the dashboard to review the logged request activity and zone analytics.
+
+## Current prototype boundaries
+
+- The station network is a curated demo dataset, not a live Riyadh Metro feed.
+- Indoor localization is modeled through beacon-zone metadata and workflow logic, not live hardware telemetry.
+- The wristband integration is conceptual and represented in software output for demonstration purposes.
+- Authentication is a simple session-based prototype login, not a production identity system.
+
+These boundaries are intentional so the project remains explainable, testable, and suitable for academic defense or prototype presentations.
