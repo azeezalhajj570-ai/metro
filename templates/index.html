@@ -14,10 +14,10 @@
         </p>
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+    <div class="grid gap-6 {% if plan %}xl:grid-cols-[1.1fr_0.9fr]{% endif %}">
         <div class="space-y-6">
-            <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-                <div class="rounded-[32px] bg-white p-8 shadow-panel">
+            <div class="grid gap-5 xl:grid-cols-[1.45fr_0.75fr]">
+                <div class="rounded-[32px] bg-white p-6 shadow-panel lg:p-7">
                     <div class="mb-6">
                         <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal">Traveler Workspace</p>
                         <h3 class="mt-2 text-3xl font-semibold tracking-tight text-ink">Generate an assistance plan</h3>
@@ -106,13 +106,13 @@
                     </form>
                 </div>
 
-                <div class="rounded-[32px] bg-ink p-8 text-white shadow-panel">
+                <div class="rounded-[32px] bg-ink p-6 text-white shadow-panel lg:p-7">
                     <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">Immediate Actions</p>
                     <div class="mt-5 grid gap-4">
                         {% for action in quick_actions %}
                             <button
                                 type="button"
-                                class="quick-action rounded-3xl border border-white/10 bg-white/10 p-5 text-left transition hover:bg-white/15"
+                                class="quick-action rounded-3xl border border-white/10 bg-white/10 p-4 text-left transition hover:bg-white/15"
                                 data-request-type="{{ action.request_type }}"
                             >
                                 <span class="block text-lg font-semibold">{{ action.label }}</span>
