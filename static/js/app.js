@@ -1,4 +1,46 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const body = document.body;
+    const mobileToggle = document.getElementById("mobile-nav-toggle");
+    const mobileClose = document.getElementById("mobile-nav-close");
+    const mobileSidebar = document.getElementById("mobile-sidebar");
+    const mobileBackdrop = document.getElementById("mobile-nav-backdrop");
+
+    const openMobileNav = () => {
+        if (!mobileSidebar || !mobileBackdrop || !mobileToggle) {
+            return;
+        }
+        body.classList.add("mobile-nav-open");
+        mobileSidebar.setAttribute("aria-hidden", "false");
+        mobileBackdrop.classList.remove("hidden");
+        mobileToggle.setAttribute("aria-expanded", "true");
+    };
+
+    const closeMobileNav = () => {
+        if (!mobileSidebar || !mobileBackdrop || !mobileToggle) {
+            return;
+        }
+        body.classList.remove("mobile-nav-open");
+        mobileSidebar.setAttribute("aria-hidden", "true");
+        mobileBackdrop.classList.add("hidden");
+        mobileToggle.setAttribute("aria-expanded", "false");
+    };
+
+    if (mobileToggle) {
+        mobileToggle.addEventListener("click", openMobileNav);
+    }
+
+    if (mobileClose) {
+        mobileClose.addEventListener("click", closeMobileNav);
+    }
+
+    if (mobileBackdrop) {
+        mobileBackdrop.addEventListener("click", closeMobileNav);
+    }
+
+    document.querySelectorAll("#mobile-sidebar a").forEach((link) => {
+        link.addEventListener("click", closeMobileNav);
+    });
+
     const form = document.getElementById("plan-form");
     const button = document.getElementById("plan-button");
 
