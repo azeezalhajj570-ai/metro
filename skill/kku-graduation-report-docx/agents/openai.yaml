@@ -1,0 +1,5 @@
+interface:
+  display_name: KKU Graduation Report DOCX
+  short_description: Build a full graduation project report from GitHub into a local .docx
+  category: writing
+  icon: file-text
